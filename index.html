@@ -5,12 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
+
+
     <!-- When making your own version these PWA install pages are not needed. Started here -->
     <link rel="manifest" href="pwa/manifest.json">
     <script src="pwa/pwa.js"></script>
     <!-- When making your own version these pages are not needed. Ended here -->
 
-  
+
+
+
+
+
     <title>Sovereign AI & Dynamic Router Sandbox</title>
     <script async src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-alpha.1/es5/tex-mml-chtml.js"></script>
     <style>
@@ -91,7 +97,7 @@
 
         <div style="margin-bottom: 20px; padding: 10px; border: 1px dashed #444; background: #222;">
             <label style="display: block; margin-bottom: 5px; font-weight: bold;">Select Local Weights Model Target:</label>
-            <select id="myModelSelector" onchange="myInitializeEngine()" style="width: 100%; padding: 8px; background: #333; color: #fff; border: 1px solid #555; font-family: monospace;">
+            <select id="myModelSelector" onchange="myInitializeEngine(); mySaveConfigToLocalStorage();" style="width: 100%; padding: 8px; background: #333; color: #fff; border: 1px solid #555; font-family: monospace;">
                 <option value="https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/main/gemma-4-E2B-it-web.litertlm">
                     Gemma 4 E2B IT (Web Optimization via Hugging Face CDN)
                 </option>
@@ -105,10 +111,16 @@
                     Compile & Instantiate Local Engine
                 </button>
 
+                <!-- Added: Activate LLM on page open Checkbox -->
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #bbb;">
+                    <input type="checkbox" id="myAutoActivateToggle" onchange="mySaveConfigToLocalStorage()" style="cursor: pointer; accent-color: #4caf50;">
+                    <label for="myAutoActivateToggle" style="cursor: pointer; user-select: none; font-weight: bold;">Activate LLM on page open</label>
+                </div>
+
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <label style="font-weight: bold;">Max Token Sequence Allocation:</label>
                     <input type="number" id="myMaxTokensInput" value="4096" step="1024" min="1024" max="119808" 
-                           onchange="myHandleTokenChange()" 
+                           onchange="myHandleTokenChange(); mySaveConfigToLocalStorage();" 
                            style="width: 100px; padding: 6px; background: #333; color: #fff; border: 1px solid #555; font-family: monospace;">
                 </div>
             </div>
@@ -133,13 +145,13 @@
 
         <div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; align-items: center; gap: 20px; font-size: 0.85rem; color: #bbb;">
             <div style="display: flex; align-items: center; gap: 8px;">
-                <input type="checkbox" id="myAutoScrollToggle" checked style="cursor: pointer; accent-color: #4caf50;">
+                <input type="checkbox" id="myAutoScrollToggle" onchange="mySaveConfigToLocalStorage()" checked style="cursor: pointer; accent-color: #4caf50;">
                 <label for="myAutoScrollToggle" style="cursor: pointer; user-select: none;">Enable active terminal window auto-scrolling during streaming</label>
             </div>
             <div style="display: flex; align-items: center; gap: 8px;">
-                <input type="checkbox" id="myExcludePromptToggle" style="cursor: pointer; accent-color: #4caf50;">
+                <input type="checkbox" id="myExcludePromptToggle" onchange="mySaveConfigToLocalStorage()" style="cursor: pointer; accent-color: #4caf50;">
                 <label for="myExcludePromptToggle" style="cursor: pointer; user-select: none;">Exclude user prompt tracking from terminal window</label>          
-                 </div>
+            </div>
         </div>
 
         <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: flex-end;">
@@ -163,7 +175,7 @@
             <div style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center; margin-bottom: 10px;">
                 <div style="flex-grow: 1; min-width: 250px;">        
                      <label for="myUrlInput" style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85rem; color: #aaa;">Custom Helper Target URL: then ctrl-v to paste</label>
-                     <input type="text" id="myUrlInput" value="https://gemini.google.com/app" style="width: 70%; padding: 6px; background: #2b2b2b; color: #fff; border: 1px solid #444; font-family: monospace; box-sizing: border-box;">
+                     <input type="text" id="myUrlInput" value="https://gemini.google.com/app" onchange="mySaveConfigToLocalStorage()" style="width: 70%; padding: 6px; background: #2b2b2b; color: #fff; border: 1px solid #444; font-family: monospace; box-sizing: border-box;">
                 </div>
                 <div style="display: flex; gap: 5px; align-items: flex-end; padding-top: 20px;">
                     <button onclick="myHandleAction('custom')" style="padding: 8px 12px; cursor: pointer; font-family: monospace; background-color: #fff3e0; color: #000; border: 1px solid #ffe0b2; font-weight: bold;">Send Selected to Custom URL</button>
@@ -199,7 +211,7 @@
             <summary>∑ LATEX Math Viewer</summary>
             <div class="my-panel-inner">
                 <div style="margin-bottom: 10px;">
-                    <label><input type="checkbox" id="auto-math-toggle" checked> Auto-render calculations while generation streams</label>
+                    <label><input type="checkbox" id="auto-math-toggle" onchange="mySaveConfigToLocalStorage()" checked> Auto-render calculations while generation streams</label>
                 </div>
                 <button class="my-btn" onclick="myRenderMathManual()">Render Manually</button>
                 <br><br>
@@ -213,7 +225,7 @@
             <summary>🖼 Image Viewer (SVG & Inline Base64)</summary>
             <div class="my-panel-inner">
                 <div style="margin-bottom: 10px;">
-                    <label><input type="checkbox" id="auto-image-toggle" checked> Auto-extract vector images during stream</label>
+                    <label><input type="checkbox" id="auto-image-toggle" onchange="mySaveConfigToLocalStorage()" checked> Auto-extract vector images during stream</label>
                 </div>
                 <button class="my-btn" onclick="myExtractImageManual()">Extract Image</button>
                 <br><br>
@@ -238,18 +250,71 @@
 
         const myDbName = "mySovereignAiStorage";
         const myStoreName = "myModelWeightsStore";
+        const MY_STORAGE_KEY = "mySovereignAiConfig";
 
-        // ADDED: Your hyperlink parser function integrated cleanly
-        const myConvertUrlsToHyperlinks = (myRawText) => {
-            const myUrlRegex = /(https?:\/\/[^\s]+)/g;
-            return myRawText.replace(myUrlRegex, (myMatch) => {
-                let myCleanUrl = myMatch.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]$/, '');
-                return `<a href="${myCleanUrl}" target="_blank" style="color: #4caf50; font-weight: bold; text-decoration: underline;">${myCleanUrl}</a>`;
-            });
+        // ADDED: Local Storage management logic
+        window.mySaveConfigToLocalStorage = () => {
+            const isAutoActivateOn = document.getElementById("myAutoActivateToggle").checked;
+
+            if (!isAutoActivateOn) {
+                // If unchecked, completely purge the configurations key entry to prevent loops
+                localStorage.removeItem(MY_STORAGE_KEY);
+                return;
+            }
+
+            // Save state of parameters, texts, and checkboxes into a cohesive structure
+            const configData = {
+                autoActivate: true,
+                modelTarget: document.getElementById("myModelSelector").value,
+                maxTokens: document.getElementById("myMaxTokensInput").value,
+                helperUrl: document.getElementById("myUrlInput").value,
+                toggles: {
+                    autoScroll: document.getElementById("myAutoScrollToggle").checked,
+                    excludePrompt: document.getElementById("myExcludePromptToggle").checked,
+                    autoMath: document.getElementById("auto-math-toggle").checked,
+                    autoImage: document.getElementById("auto-image-toggle").checked
+                }
+            };
+
+            localStorage.setItem(MY_STORAGE_KEY, JSON.stringify(configData));
+        };
+
+        const myLoadConfigFromLocalStorage = () => {
+            const savedRaw = localStorage.getItem(MY_STORAGE_KEY);
+            if (!savedRaw) return;
+
+            try {
+                const configData = JSON.parse(savedRaw);
+
+                // Re-hydrate application metrics 
+                document.getElementById("myAutoActivateToggle").checked = configData.autoActivate || false;
+                if (configData.modelTarget) document.getElementById("myModelSelector").value = configData.modelTarget;
+                if (configData.maxTokens) document.getElementById("myMaxTokensInput").value = configData.maxTokens;
+                if (configData.helperUrl) document.getElementById("myUrlInput").value = configData.helperUrl;
+
+                if (configData.toggles) {
+                    document.getElementById("myAutoScrollToggle").checked = configData.toggles.autoScroll;
+                    document.getElementById("myExcludePromptToggle").checked = configData.toggles.excludePrompt;
+                    document.getElementById("auto-math-toggle").checked = configData.toggles.autoMath;
+                    document.getElementById("auto-image-toggle").checked = configData.toggles.autoImage;
+                }
+
+                // Check automated runtime permission layers
+                if (configData.autoActivate === true) {
+                    setTimeout(() => {
+                        window.myInitializeEngine();
+                    }, 400); // 400ms delay protects against early engine creation state anomalies
+                }
+            } catch (err) {
+                console.error("Failed parsing localStorage configurations context tracking layers:", err);
+            }
         };
 
         // Setup File Drop Event Interceptors on Initialization
         document.addEventListener("DOMContentLoaded", () => {
+            // Re-hydrate interface adjustments out of disk caches safely before attachment processes run
+            myLoadConfigFromLocalStorage();
+
             const myPromptBox = document.getElementById("myUserPrompt");
 
             myPromptBox.addEventListener("dragover", (myEvent) => {
@@ -284,6 +349,23 @@
                 }
             });
         });
+
+        // Your hyperlink parser function integrated cleanly
+const myConvertUrlsToHyperlinks = (myRawText) => {
+    // Optimized regex: finds URLs but stops before trailing punctuation, backticks, or quotes
+    const myUrlRegex = /(https?:\/\/[^\s`'"()<>]+)/g;
+    
+    return myRawText.replace(myUrlRegex, (myMatch) => {
+        // Clean up any trailing trailing punctuation that sneaks through
+        let myCleanUrl = myMatch.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]$/, '');
+        
+        // Remove markdown backticks if they are explicitly wrapping the URL bounds
+        if (myCleanUrl.startsWith('`')) myCleanUrl = myCleanUrl.slice(1);
+        if (myCleanUrl.endsWith('`')) myCleanUrl = myCleanUrl.slice(0, -1);
+        
+        return `<a href="${myCleanUrl}" target="_blank" style="color: #4caf50; font-weight: bold; text-decoration: underline;">${myCleanUrl}</a>`;
+    });
+};
 
         // Helper File Parser via Async API Wrap
         const myReadFileContents = async (myFileObject) => {
