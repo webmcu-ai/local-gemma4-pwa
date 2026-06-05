@@ -4,7 +4,7 @@
   "start_url": "/local-gemma4-pwa/index.html",
   "display": "standalone",
   "background_color": "#1e1e2e",
-  "theme_color": "#ff79c6",
+  "theme_color": "#22B14C",
   "orientation": "portrait",
   "icons": [
     {
