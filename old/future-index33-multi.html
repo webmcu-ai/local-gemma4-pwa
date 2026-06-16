@@ -9,19 +9,10 @@
 
 
 
-
-
-
-
     <!-- When making your own version these PWA install pages are not needed. Started here -->
     <link rel="manifest" href="pwa/manifest.json">
     <script src="pwa/pwa.js"></script>
     <!-- When making your own version these pages are not needed. Ended here -->
-
-
-
-
-
 
 
 
@@ -121,7 +112,7 @@
                     Gemma 4 E4B IT About 3 GB(Larger Footprint / Better Accuracy)
                 </option>
                 <option value="https://huggingface.co/litert-community/gemma-4-12B-it-litert-lm/resolve/main/gemma-4-12B-it.litertlm">
-                    Gemma-4-12B-it-litert-lm about 7 GB (Really Larg Footprint / Highly Accurate)
+                    Gemma-4-12B-it-litert-lm about 7 GB (Really Large Footprint / Highly Accurate)
                 </option>
                 <option value="custom">-- Use Custom Model URL Below --</option>
             </select>
@@ -284,10 +275,7 @@
             const mySelector = document.getElementById("myModelSelector");
             const myContainer = document.getElementById("myCustomUrlContainer");
             myContainer.style.display = (mySelector.value === "custom") ? "block" : "none";
-            // Only auto-initialize when a real (non-custom) model is selected
-            if (mySelector.value !== "custom") {
-                myInitializeEngine();
-            }
+            // No auto-initialize here — user must click "Compile & Instantiate Local Engine"
         };
 
         // ADDED: Local Storage management logic
